@@ -1,203 +1,290 @@
-# AutoMate AI 🚀
+<div align="center">
 
-![AutoMate AI Logo](https://via.placeholder.com/600x200?text=AutoMate+AI+Dashboard+Preview)
+# 🤖 AgentAI
 
-**AutoMate AI** is a next-generation intelligent automation platform that seamlessly integrates LangGraph-powered agents with real-time human oversight. Built for enterprises and power users who need autonomous AI agents that can execute complex workflows while maintaining human control and approval processes.
+### Autonomous AI agents with a human in the loop.
 
----
+Build, chat with, and supervise LangGraph-powered agents that can send emails, schedule events and publish to Instagram, **only after you approve**.
 
-## ✨ What It Does
+<br />
 
-AutoMate AI provides a unified interface to:
-- Create and manage intelligent agents with specialized capabilities
-- Engage in natural conversations with agents that remember context
-- Execute multi-step workflows through LangGraph orchestration
-- Handle image-based requests with automatic Cloudinary upload
-- Process approvals for email, calendar events, and Instagram publishing
-- Monitor agent performance and usage analytics
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Express](https://img.shields.io/badge/Express_5-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
 
-All while maintaining enterprise-grade security and user privacy.
+[Features](#-features) •
+[Architecture](#-architecture) •
+[Tech Stack](#-tech-stack) •
+[Getting Started](#-getting-started) •
+[API Overview](#-api-overview) •
+[Roadmap](#-roadmap) •
+[Contributing](#-contributing)
 
----
-
-## 🎯 Key Features
-
-| Feature | Description |
-|---------|-------------|
-| **Agent Management** | Create, configure, and deploy specialized AI agents with custom personalities and capabilities | 
-| **Real-time Chat Interface** | Seamless conversation flow with agent selection and context persistence | 
-| **Workflow Automation** | LangGraph-powered multi-step processes with human oversight | 
-| **Image Processing** | Automatic Cloudinary upload with metadata handling | 
-| **Approval Workflows** | Email, calendar, and Instagram publishing approvals before execution | 
-| **Firebase Authentication** | Secure login with Google/Facebook and JWT-based sessions | 
-| **Credit Management** | Usage-based pricing with real-time credit tracking | 
-| **Multi-environment Support** | Local development, staging, and production deployments | 
+</div>
 
 ---
 
-## 🛠️ Tech Stack
+## 📖 Overview
+
+**AgentAI** is a full-stack platform for running AI agents you can actually trust with real-world actions. A React frontend gives users a chat interface to talk to agents; an Express + TypeScript backend handles authentication, billing and persistence, and bridges to **LangGraph** agents through the **Model Context Protocol (MCP)**.
+
+When an agent wants to do something consequential (send an email, create a calendar event, publish an Instagram post), it pauses and asks for **explicit user approval** before executing.
+
+<!--
+  📸 Add a screenshot or GIF here:
+  <p align="center"><img src="docs/assets/demo.gif" alt="AgentAI demo" width="800" /></p>
+-->
+
+---
+
+## ✨ Features
+
+| | Feature | Description |
+|---|---|---|
+| 💬 | **Real-time chat** | Talk to agents with agent selection and persistent conversation context |
+| 🧠 | **LangGraph orchestration** | Multi-step agent workflows connected to the backend via MCP |
+| ✅ | **Human-in-the-loop approvals** | Review and approve emails, calendar events and Instagram posts before they run |
+| 🖼️ | **Image handling** | Upload images in chat, stored through Cloudinary |
+| 🔐 | **Secure authentication** | Google and Facebook sign-in via Firebase, with Firebase Admin and JWT on the server |
+| 💳 | **Payments & credits** | Razorpay integration with a usage-based credit system |
+| 🔌 | **Integrations** | Dedicated API surface for connecting external services |
+| 🎨 | **Modern UI** | Tailwind CSS and shadcn/ui components with Redux Toolkit state management |
+
+---
+
+## 🏗 Architecture
+
+```mermaid
+flowchart LR
+    U([👤 User]) --> FE
+
+    subgraph Client
+        FE["⚛️ React 19 + Vite<br/>Redux Toolkit · shadcn/ui"]
+    end
+
+    subgraph Server
+        BE["🟢 Express 5 + TypeScript<br/>REST API"]
+        DB[("🍃 MongoDB<br/>Mongoose")]
+    end
+
+    subgraph AI
+        MCP["🔗 MCP Bridge"]
+        LG["🧠 LangGraph Agents"]
+    end
+
+    FE <-->|Axios / JWT| BE
+    FE -->|Sign in| FB[["🔥 Firebase Auth"]]
+    BE -->|Verify token| FB
+    BE <--> DB
+    BE <--> MCP <--> LG
+    FE -->|Image upload| CL[["☁️ Cloudinary"]]
+    BE --> RZ[["💳 Razorpay"]]
+
+    LG -. "needs approval" .-> BE
+    BE -. "approve / reject" .-> FE
+```
+
+**Request lifecycle**
+
+1. The user signs in with Firebase on the frontend and receives a token.
+2. The frontend calls the Express API; the backend verifies the token and issues or validates a JWT session.
+3. A chat message is routed through the **MCP** layer to a **LangGraph** agent.
+4. If the agent proposes a sensitive action, the backend surfaces it as a **pending approval** in the UI.
+5. Once approved, the action runs and credits are deducted from the user's balance.
+
+---
+
+## 🛠 Tech Stack
+
+<table>
+<tr>
+<td valign="top" width="50%">
 
 ### Frontend
-- **Framework**: React 19 + Vite + TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **State Management**: Redux Toolkit
-- **Networking**: Axios with interceptors
-- **Icons**: Lucide React
-- **Authentication**: Firebase Admin SDK
+- **React 19** + **Vite** + **TypeScript**
+- **Tailwind CSS** + **shadcn/ui**
+- **Redux Toolkit** for state
+- **Axios** with interceptors
+- **Lucide React** icons
+- **Firebase** client auth
+
+</td>
+<td valign="top" width="50%">
 
 ### Backend
-- **Framework**: Node.js + Express 5
-- **Database**: MongoDB + Mongoose ODM
-- **Authentication**: Firebase Admin Auth + JWT
-- **Orchestration**: LangGraph (Python bridge via MCP)
-- **Payments**: Razorpay integration
-- **Configuration**: Dotenv environment management
+- **Node.js** + **Express 5** + **TypeScript**
+- **MongoDB** + **Mongoose**
+- **Firebase Admin** + **JWT**
+- **LangGraph** via **MCP**
+- **Razorpay** payments
+- **dotenv** configuration
 
-### Infrastructure
-- **MCP Server**: Model Context Protocol for LangGraph integration
-- **Cloud Storage**: Cloudinary for image uploads
-- **Real-time**: WebSocket-compatible via LangGraph checkpointer
+</td>
+</tr>
+</table>
+
+**Third-party services:** Firebase · Cloudinary · Razorpay · MongoDB
 
 ---
 
-## 🚀 Quick Start
+## 📁 Project Structure
+
+```
+AgentAI/
+├── backend/     # Express 5 + TypeScript API (auth, agents, chat, integrations, payments)
+└── frontend/    # React 19 + Vite + TypeScript client
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm/yarn installed
-- MongoDB running locally or cloud instance
-- Firebase project credentials (service account JSON)
-- Cloudinary API keys
-- Razorpay API keys (for production)
 
-### Installation
+- **Node.js** 18 or later and **npm**
+- A **MongoDB** instance (local or Atlas)
+- A **Firebase** project with Google/Facebook sign-in enabled, plus a service account key
+- A **Cloudinary** account
+- A **Razorpay** account (test keys are fine for development)
+- The **LangGraph** agent service reachable through MCP
+
+### 1. Clone the repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/automate-ai.git
+git clone https://github.com/harish-kush/AgentAI.git
+cd AgentAI
+```
 
-# Install dependencies
+### 2. Set up the backend
+
+```bash
+cd backend
 npm install
-
-# Environment setup
-# Create .env file in project root
-cp .env.example .env
-
-# Fill in required environment variables
-
-# Start both frontend and backend concurrently
+cp .env.example .env   # then fill in the values below
 npm run dev
 ```
 
-### Development Commands
+### 3. Set up the frontend
 
 ```bash
-# Frontend development
+cd ../frontend
+npm install
+cp .env.example .env   # then fill in the values below
 npm run dev
+```
 
-# Backend development
-npm run dev:backend  # (add to package.json scripts)
+Open **http://localhost:5173** in your browser.
 
-# Build for production
-npm run build
-npm start
+---
+
+## 🔑 Environment Variables
+
+> ⚠️ Never commit `.env` files or service account keys. The names below are a template, so match them to your `.env.example`.
+
+**`backend/.env`**
+
+```env
+# Server
+PORT=5000
+NODE_ENV=development
+CLIENT_URL=http://localhost:5173
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/agentai
+
+# Auth
+JWT_SECRET=your_jwt_secret
+FIREBASE_SERVICE_ACCOUNT=./serviceAccountKey.json
+
+# Payments
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxx
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+
+# LangGraph / MCP
+MCP_SERVER_URL=http://localhost:8000
+```
+
+**`frontend/.env`**
+
+```env
+VITE_API_URL=http://localhost:5000
+
+# Firebase
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_APP_ID=
+
+# Cloudinary
+VITE_CLOUDINARY_CLOUD_NAME=
+VITE_CLOUDINARY_UPLOAD_PRESET=
 ```
 
 ---
 
-## 📖 Usage Guide
+## 📡 API Overview
 
-### 1. Authentication
-- Visit `http://localhost:5173/login`
-- Sign in with Google/Facebook
-- Your session persists across reloads
+The backend exposes REST routes grouped by domain:
 
-### 2. Creating Agents
-- Navigate to **My Agents** → **Create New Agent**
-- Configure agent name, description, and system prompt
-- Choose agent personality from presets or custom define
-- Save and start chatting immediately
+| Group | Responsibility |
+|---|---|
+| `auth` | Sign-in, token verification, session handling |
+| `agents` | Create, list, configure and manage agents |
+| `chat` | Send messages, retrieve history, handle approvals |
+| `integrations` | Connect and manage external services |
+| `payments` | Razorpay orders, verification and credit top-ups |
 
-### 3. Working with Agents
-- Select agent from dropdown in chat interface
-- Send messages to execute tasks
-- Upload images for processing
-- Review approvals before final execution
-
-### 4. Integrations
-- Access integrations panel for:
-  - Google Calendar sync
-  - Email automation
-  - Instagram publishing queue
-  - Payment management
+> Add a full endpoint reference (methods, paths, payloads) here, or link to a Postman collection or OpenAPI spec.
 
 ---
 
-## 🏢 Enterprise Features
+## 🧭 Usage
 
-- **Role-based Access Control**: Admin, User, and Viewer roles
-- **Audit Logging**: Full activity tracking with timestamps
-- **API Rate Limiting**: Configurable per user/agent
-- **Credit Management**: Real-time usage monitoring with auto-refill options
-- **Multi-tenant Support**: Isolated workspaces for organizations
-- **SLA Monitoring**: Performance metrics and uptime tracking
+1. **Sign in** with Google or Facebook.
+2. **Pick an agent** from the chat interface.
+3. **Send a message**, optionally with an image attachment.
+4. **Review approvals** when the agent proposes an email, calendar event or Instagram post.
+5. **Track credits** as you use the platform and top up through Razorpay when needed.
+
+---
+
+## 🗺 Roadmap
+
+- [ ] Add screenshots / demo GIF
+- [ ] Publish full API documentation (OpenAPI)
+- [ ] Automated tests and CI pipeline
+- [ ] Docker Compose for one-command local setup
+- [ ] Additional agent tools and integrations
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Development Workflow
+Contributions are welcome!
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4: Push to branch: `git push origin feature/your-feature`
+2. Create a branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m "feat: add your feature"`
+4. Push the branch: `git push origin feature/your-feature`
 5. Open a Pull Request
 
-### Code Standards
-- Follow Prettier formatting
-- Use ESLint with React rules
-- TypeScript strict mode enabled
-- Jest for unit tests, Cypress for E2E
+---
+
+## 📄 License
+
+Add a `LICENSE` file to the repository and reference it here (for example, MIT).
 
 ---
 
-## 📊 Project Status
+<div align="center">
 
-- ✅ **Production Ready**: Core features stable
-- 🔄 **Active Development**: New agent capabilities
-- 📈 **Growing User Base**: 500+ active users
-- 🎯 **Roadmap**: Mobile app, API marketplace, enterprise dashboard
+**Built by [Harish Kush](https://github.com/harish-kush)**
 
----
+If you find this project useful, consider giving it a ⭐
 
-## 📜 License
-
-Distributed under the **MIT License**.
-
----
-
-## 📞 Contact & Support
-
-- **GitHub**: https://github.com/yourusername/automate-ai
-- **Documentation**: [AutoMate AI Docs](https://automate-ai.docs)
-- **Community**: [Discord Server](https://discord.gg/automate-ai)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/automate-ai/issues)
-
-> **AutoMate AI** is a project by [Harish Kush](https://harishkush.com) • Built with love in India 🇮🇳
-
----
-
-### Acknowledgments
-
-Special thanks to:
-- LangGraph team for the incredible orchestration framework
-- Firebase team for authentication infrastructure
-- Cloudinary for image hosting
-- Razorpay for payment processing
-- The open source community for inspiration and tools
-
----
-
-*Last updated: November 2026*
+</div>
