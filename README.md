@@ -165,7 +165,6 @@ cd AgentAI
 ```bash
 cd backend
 npm install
-cp .env.example .env   # then fill in the values below
 npm run dev
 ```
 
@@ -174,56 +173,10 @@ npm run dev
 ```bash
 cd ../frontend
 npm install
-cp .env.example .env   # then fill in the values below
 npm run dev
 ```
 
 Open **http://localhost:5173** in your browser.
-
----
-
-## 🔑 Environment Variables
-
-> ⚠️ Never commit `.env` files or service account keys. The names below are a template, so match them to your `.env.example`.
-
-**`backend/.env`**
-
-```env
-# Server
-PORT=5000
-NODE_ENV=development
-CLIENT_URL=http://localhost:5173
-
-# Database
-MONGODB_URI=mongodb://localhost:27017/agentai
-
-# Auth
-JWT_SECRET=your_jwt_secret
-FIREBASE_SERVICE_ACCOUNT=./serviceAccountKey.json
-
-# Payments
-RAZORPAY_KEY_ID=rzp_test_xxxxxxxx
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-
-# LangGraph / MCP
-MCP_SERVER_URL=http://localhost:8000
-```
-
-**`frontend/.env`**
-
-```env
-VITE_API_URL=http://localhost:5000
-
-# Firebase
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_APP_ID=
-
-# Cloudinary
-VITE_CLOUDINARY_CLOUD_NAME=
-VITE_CLOUDINARY_UPLOAD_PRESET=
-```
 
 ---
 
